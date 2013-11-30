@@ -1,5 +1,6 @@
 TSDef_BitmapDataForCreateJS
 ===========================
+[![Build Status](https://travis-ci.org/gyohk/TSDef_BitmapDataForCreateJS.png?branch=master)](https://travis-ci.org/gyohk/TSDef_BitmapDataForCreateJS)
 
 TypeScript Definition of BitmapData for CreateJS.
 
