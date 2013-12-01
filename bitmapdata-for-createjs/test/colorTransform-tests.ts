@@ -12,38 +12,61 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
     var FPS: number = 60;
 
-    var _canvas: HTMLCanvasElement;
-    var _stage: createjs.Stage;
-	var _shape: createjs.Shape;
-    var _bmd01: createjs.BitmapData;
+	var _canvas: HTMLCanvasElement;
+	var _stage: createjs.Stage;
+	var _image01: HTMLImageElement;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		createjs.Ticker.setFPS(FPS);
 		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-		draw();
+		load();
 	}
 
-    function draw(): void {
-		_shape = new createjs.Shape();
-		var g = _shape.graphics;
-		g.f("rgba(0,0,255,1)").dp(0, 0, 100, 5, 0.6, -90).ef();
-		_shape.x = _canvas.width >> 1;
-		_shape.y = _canvas.height >> 1;
-		_shape.cache(-100, -100, 200, 200);
-		_bmd01 = createjs.BitmapData.getBitmapData(_shape);
-		var colorTransform = new createjs.ColorTransform(1, 1, 0, 1, 255);
-		var rect = new createjs.Rectangle(0, 0, _bmd01.width >> 1, _bmd01.height);
+	function draw(): void {
+		_bmd01 = new createjs.BitmapData(_image01);
+		var halfW = _image01.width >> 1;
+		var rect = new createjs.Rectangle(halfW, 0, halfW, _image01.height);
+		var colorTransform = new createjs.ColorTransform(0.5, 1.5, 1.5);
 		_bmd01.colorTransform(rect, colorTransform);
-		_stage.addChild(_shape);
+		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
+		_bitmap01.regX = _bmd01.width >> 1;
+		_bitmap01.regY = _bmd01.height >> 1;
+		_bitmap01.x = _canvas.width >> 1;
+		_bitmap01.y = _canvas.height >> 1;
+		_stage.addChild(_bitmap01);
 		_stage.update();
+	}
+
+	function load(): void {
+		var loader = new createjs.LoadQueue();
+		var manifest = [
+			{src:"img/image_01.jpg", id:"image01"}
+		];
+        function fileloadHandler(evt: createjs.Event): void {
+			switch(evt.item.id) {
+				case "image01" :
+                    _image01 = <HTMLImageElement>evt.result;
+					break;
+			}
+		}
+        function completeHandler(evt: createjs.Event): void {
+			loader.removeAllEventListeners();
+			loader.removeAll();
+			draw();
+		}
+		loader.addEventListener("fileload", fileloadHandler);
+		loader.addEventListener("complete", completeHandler);
+		loader.loadManifest(manifest);
 	}
 
     window.addEventListener("load", function loadHandler(evt: Event): void {

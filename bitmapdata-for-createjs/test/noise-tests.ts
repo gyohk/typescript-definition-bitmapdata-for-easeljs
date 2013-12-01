@@ -12,16 +12,16 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
     var FPS: number = 60;
 
     var _canvas: HTMLCanvasElement;
     var _stage: createjs.Stage;
-    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap;
+    var _bmd01: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
@@ -33,30 +33,18 @@
 
     function draw(): void {
 		_bmd01 = new createjs.BitmapData(null, 200, 200);
-		_bmd02 = _bmd01.clone();
-		var rect = new createjs.Rectangle(0, 0, 200, 200);
-		var color01 = 0x80FF0000;
-		_bmd01.fillRect(rect, color01);
-		var color02 = createjs.Graphics.getRGB(0, 0, 255, 0.5)
-		_bmd02.fillRect(rect, color02);
-		var x = 50;
-		var y = 50;
-		var width = 100;
-		var height = 100;
-		_bmd01.clearRect(x, y, width, height);
-		_bmd02.clearRect(x, y, width, height);
+		var low = 128;
+		var high = 200;
+		var channel = Object.create(createjs.BitmapDataChannel);
+		var channelOptions = channel.BLUE | channel.ALPHA;
+		var grayScale = false;
+		_bmd01.noise(low, high, channelOptions, grayScale);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
 		_bitmap01.regX = _bmd01.width >> 1;
 		_bitmap01.regY = _bmd01.height >> 1;
-		_bitmap01.x = (_canvas.width >> 1) - 120;
+		_bitmap01.x = _canvas.width >> 1;
 		_bitmap01.y = _canvas.height >> 1;
 		_stage.addChild(_bitmap01);
-		_bitmap02 = new createjs.Bitmap(_bmd02.canvas);
-		_bitmap02.regX = _bmd02.width >> 1;
-		_bitmap02.regY = _bmd02.height >> 1;
-		_bitmap02.x = (_canvas.width >> 1) + 120;
-		_bitmap02.y = _canvas.height >> 1;
-		_stage.addChild(_bitmap02);
 		_stage.update();
 	}
 

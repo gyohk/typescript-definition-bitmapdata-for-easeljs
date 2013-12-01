@@ -12,90 +12,48 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
-    var FPS: number = 60;
+	var FPS: number = 60;
 
-    var _canvas: HTMLCanvasElement;
-    var _stage: createjs.Stage;
-	var _centerX: number;
-    var _centerY: number;
-    var _image01: HTMLImageElement;
-    var _bmd01: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap;
-    var _shape: createjs.Shape;
-    var _shape_bmd: createjs.BitmapData;
-	var _angle: number = 0;
-	var _isHitting: boolean = false;
+	var _canvas: HTMLCanvasElement;
+	var _stage: createjs.Stage;
+	var _image01: HTMLImageElement;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
-		_centerX = _canvas.width >> 1;
-		_centerY = _canvas.height >> 1;
 		createjs.Ticker.setFPS(FPS);
 		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 		load();
 	}
 
-    function draw(): void {
+	function draw(): void {
 		_bmd01 = new createjs.BitmapData(_image01);
 		var source = _bmd01;
-		var sourceRect = new createjs.Rectangle(0, 0, _bmd01.width, _bmd01.height);
-		var destPoint = new createjs.Point(sourceRect.x, sourceRect.y);
-		_bmd01.threshold(_bmd01, sourceRect, destPoint, "<", 0xFFEE0000, 0x00000000, 0xFFFF0000);
-		_bmd01.threshold(_bmd01, sourceRect, destPoint, ">", 0xFF00CCCC, 0x00000000, 0xFF00FFFF);
+		var sourceRect = new createjs.Rectangle(90, 20, 200, 200);
+		var destPoint = new createjs.Point(90, 20);
+		var filter = new createjs.BlurFilter(8, 8, 1);
+		_bmd01.applyFilter(source, sourceRect, destPoint, filter);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
-		_bitmap01.x = _centerX - (_bmd01.width >> 1);
-		_bitmap01.y = _centerY - (_bmd01.height >> 1);
+		_bitmap01.x = 130;
+		_bitmap01.y = 60;
 		_stage.addChild(_bitmap01);
-		_shape = new createjs.Shape();
-		_shape.graphics.f("rgba(0,0,255,0.75)").dc(0, 0, 20).ef();
-		_shape.cache(-20, -20, 40, 40);
-		_shape_bmd = createjs.BitmapData.getBitmapData(_shape);
-		_stage.addChild(_shape);
-		createjs.Ticker.addEventListener("tick", tickHandler);
-	}
-
-    function tickHandler(evt: createjs.Event): void {
-		_shape.x = (Math.cos(_angle * createjs.Matrix2D.DEG_TO_RAD) * 160 + _centerX) >> 0;
-		_shape.y = (Math.sin(_angle * createjs.Matrix2D.DEG_TO_RAD) * 80 + _centerY) >> 0;
-		var firstPoint = new createjs.Point(_bitmap01.x, _bitmap01.y);
-		var firstAlphaThreshold = 0xFF;
-		var secondObject = _shape_bmd;
-		var secondObjectPoint = new createjs.Point(_shape.x -20, _shape.y -20);
-		var secondAlphaThreshold = 0x80;
-		if (_bmd01.hitTest(firstPoint, firstAlphaThreshold, secondObject, secondObjectPoint, secondAlphaThreshold)) {
-			if (!_isHitting) {
-				changeColor("rgba(0,255,0,0.75)");
-			}
-		} else {
-			if (_isHitting) {
-				changeColor("rgba(0,0,255,0.75)");
-			}
-		}
-		_angle += 1;
-		_angle = _angle % 360;
 		_stage.update();
 	}
 
-    function changeColor(color: string): void {
-		_isHitting = !_isHitting;
-		_shape.graphics.c().f(color).dc(0, 0, 20).ef();
-		_shape.updateCache();
-		_shape_bmd.updateImageData();
-	}
-
-    function load(): void {
+	function load(): void {
 		var loader = new createjs.LoadQueue();
 		var manifest = [
-			{src:"img/image_01.jpg", id:"image01"}
+			{src:"img/image_02.jpg", id:"image02"}
 		];
         function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
-				case "image01" :
+				case "image02" :
                     _image01 = <HTMLImageElement>evt.result;
 					break;
 			}

@@ -12,68 +12,63 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
-    var FPS: number = 60;
+	var FPS: number = 60;
 
 	var _canvas: HTMLCanvasElement;
 	var _stage: createjs.Stage;
-    var _image01: HTMLImageElement, _image02: HTMLImageElement;
-    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData, _bmd03: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap, _bitmap03: createjs.Bitmap;
+	var _source: createjs.BitmapData;
+	var _sourceRect: createjs.Rectangle;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
+		var shape = new createjs.Shape();
+		var g = shape.graphics;
+		g.f("rgba(64,64,64,1)").dp(0, 0, 20, 6, 0.8, -90).ef();
+		shape.x = _canvas.width >> 1;
+		shape.y = _canvas.height >> 1;
+		var boxBlurFilter = new createjs.BlurFilter(2, 2, 1);
+		shape.filters = [boxBlurFilter];
+		_sourceRect = new createjs.Rectangle(-20, -20, 40, 40);
+		shape.cache(_sourceRect.x, _sourceRect.y, _sourceRect.width, _sourceRect.height);
+		_source = createjs.BitmapData.getBitmapData(shape);
+		_bmd01 = new createjs.BitmapData(null, 640, 360, 0x000000);
+		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
+		_stage.addChild(_bitmap01);
 		createjs.Ticker.setFPS(FPS);
 		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-		load();
+		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
-	function draw(): void {
-		_bmd01 = new createjs.BitmapData(_image01);
-		_bmd03 = new createjs.BitmapData(_image02);
-		var otherSource = _bmd03;
-		_bmd02 = _bmd01.compare(otherSource);
-		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
-		_bitmap02 = new createjs.Bitmap(_bmd02.canvas);
-		_bitmap03 = new createjs.Bitmap(_bmd03.canvas);
-		_bitmap01.x = 10;
-		_bitmap02.x = 220;
-		_bitmap03.x = 430;
-		_bitmap01.y = _bitmap02.y = _bitmap03.y =  80;
-		_stage.addChild(_bitmap01);
-		_stage.addChild(_bitmap02);
-		_stage.addChild(_bitmap03);
+	function tickHandler(evt: createjs.Event): void {
+		draw();
 		_stage.update();
 	}
 
-	function load(): void {
-		var loader = new createjs.LoadQueue();
-		var manifest = [
-			{src:"img/image_01_s.jpg", id:"image01s"},
-			{src:"img/image_03_s.jpg", id:"image03s"}
-		];
-        function fileloadHandler(evt: createjs.Event): void {
-			switch(evt.item.id) {
-				case "image01s" :
-					_image01 = <HTMLImageElement>evt.result;
-					break;
-				case "image03s" :
-					_image02 = <HTMLImageElement>evt.result;
-					break;
-			}
-		}
-        function completeHandler(evt: createjs.Event): void {
-			loader.removeAllEventListeners();
-			loader.removeAll();
-			draw();
-		}
-		loader.addEventListener("fileload", fileloadHandler);
-		loader.addEventListener("complete", completeHandler);
-		loader.loadManifest(manifest);
+	function draw(): void {
+		var matrix = new createjs.Matrix2D(1, 0, 0, 1, -_sourceRect.width >> 1, -_sourceRect.height >> 1);
+		var rotation = Math.random() * 360 >> 0;
+		matrix.rotate(rotation * createjs.Matrix2D.DEG_TO_RAD);
+		var scale = Math.random() * 0.5 + 0.5;
+		matrix.scale(scale, scale);
+		var tx = Math.random() * _bmd01.width >> 0;
+		var ty = Math.random() * _bmd01.height >> 0;
+		matrix.translate(tx, ty);
+		var red = (Math.random() * 224 >> 0) + 32;
+		var green = (Math.random() * 224 >> 0) + 32;
+		var blue = (Math.random() * 224 >> 0) + 32;
+		var colorTransform = new createjs.ColorTransform(0, 0, 0, 1, red, green, blue);
+		var compositeOperation = "lighter";
+		var clipRect: createjs.Rectangle = null;
+		var smoothing = true;
+		_bmd01.draw(_source, matrix, colorTransform, compositeOperation, clipRect, smoothing);
+		_bmd01.fillRect(new createjs.Rectangle(0, 0, _bmd01.width, _bmd01.height), 0x06000000);
 	}
 
     window.addEventListener("load", function loadHandler(evt: Event): void {
@@ -82,3 +77,4 @@
 	});
 
 }(window));
+

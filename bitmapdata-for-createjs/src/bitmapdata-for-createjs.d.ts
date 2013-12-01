@@ -12,7 +12,7 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="../easeljs/easeljs.d.ts" />
+/// <reference path="../../lib/easeljs/easeljs.d.ts" />
 
 declare module createjs {
     export class BitmapData {

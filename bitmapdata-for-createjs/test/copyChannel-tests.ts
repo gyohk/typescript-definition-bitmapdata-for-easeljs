@@ -12,17 +12,17 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
     var FPS: number = 60;
 
 	var _canvas: HTMLCanvasElement;
 	var _stage: createjs.Stage;
-	var _image01: HTMLImageElement;
-    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap;
+    var _image01: HTMLImageElement, _image02: HTMLImageElement;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
@@ -33,36 +33,36 @@
 	}
 
 	function draw(): void {
-		var image = _image01;
-		_bmd01 = new createjs.BitmapData(image);
+		_bmd01 = new createjs.BitmapData(_image01);
+		var source = _image02;
+		var sourceRect = new createjs.Rectangle(0, 0, _image02.width, _image02.height);
+		var destPoint = new createjs.Point();
+		var channel = Object.create(createjs.BitmapDataChannel);
+		var sourceChannel = channel.ALPHA;
+		var destChannel = channel.BLUE;
+		_bmd01.copyChannel(source, sourceRect, destPoint, sourceChannel, destChannel);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
 		_bitmap01.regX = _bmd01.width >> 1;
 		_bitmap01.regY = _bmd01.height >> 1;
-		_bitmap01.x = (_canvas.width >> 1) - 120;
+		_bitmap01.x = _canvas.width >> 1;
 		_bitmap01.y = _canvas.height >> 1;
 		_stage.addChild(_bitmap01);
-		var width = 200;
-		var height = 200;
-		var fillColor = 0x80FF0000;
-		_bmd02 = new createjs.BitmapData(null, width, height, fillColor);
-		_bitmap02 = new createjs.Bitmap(_bmd02.canvas);
-		_bitmap02.regX = _bmd02.width >> 1;
-		_bitmap02.regY = _bmd02.height >> 1;
-		_bitmap02.x = (_canvas.width >> 1) + 120;
-		_bitmap02.y = _canvas.height >> 1;
-		_stage.addChild(_bitmap02);
 		_stage.update();
 	}
 
 	function load(): void {
 		var loader = new createjs.LoadQueue();
 		var manifest = [
-			{src:"img/image_01_s.jpg", id:"image01s"}
+			{src:"img/image_02_s.jpg", id:"image02s"},
+			{src:"img/mask.png", id:"mask"}
 		];
         function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
-				case "image01s" :
-                    _image01 = <HTMLImageElement>evt.result;
+				case "image02s" :
+					_image01 = <HTMLImageElement>evt.result;
+					break;
+				case "mask" :
+                    _image02 = <HTMLImageElement>evt.result;
 					break;
 			}
 		}

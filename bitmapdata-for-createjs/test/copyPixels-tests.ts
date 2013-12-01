@@ -12,65 +12,58 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
     var FPS: number = 60;
 
-    var _canvas: HTMLCanvasElement;
-    var _stage: createjs.Stage;
-    var _image01: HTMLImageElement, _image02: HTMLImageElement;
-    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap;
+	var _canvas: HTMLCanvasElement;
+	var _stage: createjs.Stage;
+    var _image01: HTMLImageElement, _maskImage: HTMLImageElement;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
-        _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
+		_canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		createjs.Ticker.setFPS(FPS);
 		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 		load();
 	}
 
-    function draw(): void {
-		_bmd01 = new createjs.BitmapData(_image01);
-		_bmd02 = new createjs.BitmapData(_image02);
-		var rect = new createjs.Rectangle(20, 20, 160, 160);
-		var data01 = _bmd01.getPixels(rect);
-		var data02 = _bmd02.getPixels(rect);
-		for (var i = 0, l = data01.length; i < l; i += 4) {
-			if (i / 4 % 2 !== 0) {
-				var r = i;
-				var g = i + 1;
-				var b = i + 2;
-				var a = i + 3;
-				data01[r] = data02[r];
-				data01[g] = data02[g];
-				data01[b] = data02[b];
-				data01[a] = data02[a];
-			}
-		}
-		_bmd01.setPixels(rect, data01);
+	function draw(): void {
+		_bmd01 = new createjs.BitmapData(null, 640, 360, 0xCCCCCC);
+		var source = _image01;
+		var sourceRect = new createjs.Rectangle(0, 0, _image01.width, _image01.height);
+		var destPoint: createjs.Point;
+		var alphaSource = _maskImage;
+		var alphaPoint = new createjs.Point();
+		var mergeAlpha = true;
+		destPoint = new createjs.Point(10, 80);
+		_bmd01.copyPixels(source, sourceRect, destPoint);
+		destPoint = new createjs.Point(220, 80);
+		_bmd01.copyPixels(source, sourceRect, destPoint, alphaSource);
+		destPoint = new createjs.Point(430, 80);
+		_bmd01.copyPixels(source, sourceRect, destPoint, alphaSource, alphaPoint, mergeAlpha);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
-		_bitmap01.x = 220;
-		_bitmap01.y = 80;
 		_stage.addChild(_bitmap01);
 		_stage.update();
 	}
 
-    function load(): void {
+	function load(): void {
 		var loader = new createjs.LoadQueue();
 		var manifest = [
-			{src:"img/image_01_s.jpg", id:"image01s"},
-			{src:"img/image_02_s.jpg", id:"image02s"}
+			{src:"img/image_02_s.jpg", id:"image02s"},
+			{src:"img/mask.png", id:"mask"}
 		];
         function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
-				case "image01s" :
-                    _image01 = <HTMLImageElement>evt.result;
-					break;
 				case "image02s" :
-                    _image02 = <HTMLImageElement>evt.result;
+					_image01 = <HTMLImageElement>evt.result;
+					break;
+				case "mask" :
+                    _maskImage = <HTMLImageElement>evt.result;
 					break;
 			}
 		}

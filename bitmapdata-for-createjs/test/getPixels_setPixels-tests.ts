@@ -12,8 +12,8 @@
 // AS3 like BitmapData class for CreateJS.
 // Library documentation : http://kudox.jp/reference/bitmapdata_for_easeljs/
 
-/// <reference path="bitmapdata-for-createjs.d.ts" />
-/// <reference path="../preloadjs/preloadjs.d.ts" />
+/// <reference path="../src/bitmapdata-for-createjs.d.ts" />
+/// <reference path="../../lib/preloadjs/preloadjs.d.ts" />
 
 (function (window: Window) {
     var FPS: number = 60;
@@ -21,8 +21,8 @@
     var _canvas: HTMLCanvasElement;
     var _stage: createjs.Stage;
     var _image01: HTMLImageElement, _image02: HTMLImageElement;
-    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData, _bmd03: createjs.BitmapData;
-    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap, _bitmap03: createjs.Bitmap;
+    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap;
 
     function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
@@ -34,26 +34,27 @@
 
     function draw(): void {
 		_bmd01 = new createjs.BitmapData(_image01);
-		_bmd02 = _bmd01.clone();
-		_bmd03 = new createjs.BitmapData(_image02);
-		var source = _bmd03;
-		var sourceRect = new createjs.Rectangle(0, 0, _image02.width, _image02.height);
-		var destPoint = new createjs.Point();
-		var redMultiplier = 192;
-		var greenMultiplier = 64;
-		var blueMultiplier = 128;
-		var alphaMultiplier = 128;
-		_bmd02.merge(source, sourceRect, destPoint, redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
+		_bmd02 = new createjs.BitmapData(_image02);
+		var rect = new createjs.Rectangle(20, 20, 160, 160);
+		var data01 = _bmd01.getPixels(rect);
+		var data02 = _bmd02.getPixels(rect);
+		for (var i = 0, l = data01.length; i < l; i += 4) {
+			if (i / 4 % 2 !== 0) {
+				var r = i;
+				var g = i + 1;
+				var b = i + 2;
+				var a = i + 3;
+				data01[r] = data02[r];
+				data01[g] = data02[g];
+				data01[b] = data02[b];
+				data01[a] = data02[a];
+			}
+		}
+		_bmd01.setPixels(rect, data01);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
-		_bitmap02 = new createjs.Bitmap(_bmd02.canvas);
-		_bitmap03 = new createjs.Bitmap(_bmd03.canvas);
-		_bitmap01.x = 10;
-		_bitmap02.x = 220;
-		_bitmap03.x = 430;
-		_bitmap01.y = _bitmap02.y = _bitmap03.y =  80;
+		_bitmap01.x = 220;
+		_bitmap01.y = 80;
 		_stage.addChild(_bitmap01);
-		_stage.addChild(_bitmap02);
-		_stage.addChild(_bitmap03);
 		_stage.update();
 	}
 
@@ -66,7 +67,7 @@
         function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
 				case "image01s" :
-					_image01 = <HTMLImageElement>evt.result;
+                    _image01 = <HTMLImageElement>evt.result;
 					break;
 				case "image02s" :
                     _image02 = <HTMLImageElement>evt.result;
