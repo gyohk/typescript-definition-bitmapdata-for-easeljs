@@ -15,7 +15,8 @@ http://kudox.jp/java-script/createjs-easeljs-bitmapdata
 
 TypeScriptのプログラムから読み込んで使用してください。
 
-なお、このファイル単独では動作せず、DefinitelyTypedのcreatejs.d.ts, easeljs.d.ts, tweenjs.d.ts, preloadjs.d.ts が必要です。libディレクトリに同梱していますが、最新ではない可能性があります。以下のURLからダウンロードを行ってください。
+なお、このファイル単独では動作せず、DefinitelyTypedのcreatejs.d.ts, easeljs.d.ts, tweenjs.d.ts, preloadjs.d.ts が必要です。
+libディレクトリに同梱していますが、最新ではない可能性があります。以下のURLからダウンロードを行ってください。
 
 [DefinitelyTyped](https://github.com/borisyankov/DefinitelyTyped)
 
