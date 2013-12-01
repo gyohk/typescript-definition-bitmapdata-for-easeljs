@@ -15,7 +15,7 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function (window) {
+(function (window: Window) {
     var FPS: number = 60;
 
     var _canvas: HTMLCanvasElement;
@@ -30,7 +30,7 @@
 	var _angle: number = 0;
 	var _isHitting: boolean = false;
 
-    function init(canvasID): void {
+    function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		_centerX = _canvas.width >> 1;
@@ -59,7 +59,7 @@
 		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
-    function tickHandler(evt): void {
+    function tickHandler(evt: createjs.Event): void {
 		_shape.x = (Math.cos(_angle * createjs.Matrix2D.DEG_TO_RAD) * 160 + _centerX) >> 0;
 		_shape.y = (Math.sin(_angle * createjs.Matrix2D.DEG_TO_RAD) * 80 + _centerY) >> 0;
 		var firstPoint = new createjs.Point(_bitmap01.x, _bitmap01.y);
@@ -81,7 +81,7 @@
 		_stage.update();
 	}
 
-    function changeColor(color): void {
+    function changeColor(color: string): void {
 		_isHitting = !_isHitting;
 		_shape.graphics.c().f(color).dc(0, 0, 20).ef();
 		_shape.updateCache();
@@ -93,14 +93,14 @@
 		var manifest = [
 			{src:"img/image_01.jpg", id:"image01"}
 		];
-        function fileloadHandler(evt): void {
+        function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
 				case "image01" :
-					_image01 = evt.result;
+                    _image01 = <HTMLImageElement>evt.result;
 					break;
 			}
 		}
-        function completeHandler(evt): void {
+        function completeHandler(evt: createjs.Event): void {
 			loader.removeAllEventListeners();
 			loader.removeAll();
 			draw();
@@ -110,7 +110,7 @@
 		loader.loadManifest(manifest);
 	}
 
-    window.addEventListener("load", function loadHandler(evt): void {
+    window.addEventListener("load", function loadHandler(evt: Event): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

@@ -15,16 +15,16 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function(window) {
+(function (window: Window) {
     var FPS: number = 60;
 
 	var _canvas: HTMLCanvasElement;
 	var _stage: createjs.Stage;
 	var _image01: HTMLImageElement;
-	var _bmd01, _bmd02: createjs.BitmapData;
-	var _bitmap01, _bitmap02: createjs.Bitmap;
+    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap;
 
-	function init(canvasID): void {
+    function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		createjs.Ticker.setFPS(FPS);
@@ -59,14 +59,14 @@
 		var manifest = [
 			{src:"img/image_01_s.jpg", id:"image01s"}
 		];
-		function fileloadHandler(evt): void {
+        function fileloadHandler(evt: createjs.Event): void {
 			switch(evt.item.id) {
 				case "image01s" :
-					_image01 = evt.result;
+                    _image01 = <HTMLImageElement>evt.result;
 					break;
 			}
 		}
-		function completeHandler(evt): void {
+        function completeHandler(evt: createjs.Event): void {
 			loader.removeAllEventListeners();
 			loader.removeAll();
 			draw();
@@ -76,7 +76,7 @@
 		loader.loadManifest(manifest);
 	}
 
-    window.addEventListener("load", function loadHandler(evt): void {
+    window.addEventListener("load", function loadHandler(evt: Event): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

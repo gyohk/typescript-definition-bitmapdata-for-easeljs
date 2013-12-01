@@ -82,7 +82,7 @@ declare module createjs {
         getColorBoundsRect(mask: number, color: number, findColor?: boolean): Rectangle;
         getPixel(x: number, y: number): number;
         getPixel32(x: number, y: number): number;
-        getPixels(rect: Rectangle): Uint8Array;
+        getPixels(rect: Rectangle): number[];
         histogram(hRect: Rectangle): number[];
 
         hitTest(firstPoint: Point, firstAlphaThreshold: number, secondObject: Point, secondObjectPoint?: Point, secondAlphaThreshold?: number): boolean;
@@ -102,7 +102,13 @@ declare module createjs {
         merge(source: HTMLVideoElement, sourceRect: Rectangle, destPoint: Point, redMultiplier: number, greenMultiplier: number, blueMultiplier: number, alphaMultiplier: number): void;
 
         noise(low?: number, high?: number, channelOptions?: number, grayScale?: boolean): void;
-        paletteMap(source, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: BitmapData, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: DisplayObject, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: Stage, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: HTMLImageElement, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: HTMLCanvasElement, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+        paletteMap(source: HTMLVideoElement, sourceRect: Rectangle, destPoint: Point, redArray?: number[], greenArray?: number[], blueArray?: number[], alphaArray?: number[]): void;
+
         perlinNoise(baseX: number, baseY: number, numOctaves: number, randomSeed: number, stitch?: boolean, fractalNoise?: boolean, channelOptions?: number, grayScale?: boolean, offsets?: Point[], interpolateType?: string): void;
 
         pixelDissolve(source: BitmapData, sourceRect: Rectangle, destPoint: Point, buffer?: number[], numPixels?: number, fillColor?: number): any; // number[] or number

@@ -15,15 +15,15 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function (window) {
+(function (window: Window) {
     var FPS: number = 60;
 
     var _canvas: HTMLCanvasElement;
     var _stage: createjs.Stage;
-    var _bmd01, _bmd02: createjs.BitmapData;
-    var _bitmap01, _bitmap02: createjs.Bitmap;
+    var _bmd01: createjs.BitmapData, _bmd02: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap, _bitmap02: createjs.Bitmap;
 
-	function init(canvasID): void {
+    function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		createjs.Ticker.setFPS(FPS);
@@ -60,7 +60,7 @@
 		_stage.update();
 	}
 
-    window.addEventListener("load", function loadHandler(evt): void {
+    window.addEventListener("load", function loadHandler(evt: Event): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

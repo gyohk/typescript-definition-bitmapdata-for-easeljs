@@ -15,7 +15,7 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function(window) {
+(function (window: Window) {
 	var FPS: number = 60;
 
 	var _canvas: HTMLCanvasElement;
@@ -25,7 +25,7 @@
 	var _bmd01: createjs.BitmapData;
 	var _bitmap01: createjs.Bitmap;
 
-	function init(canvasID): void {
+    function init(canvasID: string): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		var shape = new createjs.Shape();
@@ -46,7 +46,7 @@
 		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
-	function tickHandler(evt): void {
+	function tickHandler(evt: createjs.Event): void {
 		draw();
 		_stage.update();
 	}
@@ -65,13 +65,13 @@
 		var blue = (Math.random() * 224 >> 0) + 32;
 		var colorTransform = new createjs.ColorTransform(0, 0, 0, 1, red, green, blue);
 		var compositeOperation = "lighter";
-		var clipRect = null;
+		var clipRect: createjs.Rectangle = null;
 		var smoothing = true;
 		_bmd01.draw(_source, matrix, colorTransform, compositeOperation, clipRect, smoothing);
 		_bmd01.fillRect(new createjs.Rectangle(0, 0, _bmd01.width, _bmd01.height), 0x06000000);
 	}
 
-    window.addEventListener("load", function loadHandler(evt): void {
+    window.addEventListener("load", function loadHandler(evt: Event): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

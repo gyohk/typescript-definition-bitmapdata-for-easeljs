@@ -15,7 +15,7 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function(window) {
+(function (window: Window) {
     var FPS: number = 60;
     var NUM_PARTICLE: number = 10000;
     var LIGHTER_SCALE: number = 5;
@@ -24,7 +24,7 @@
 	var _instance: Object;
 	var _forceMapImage: HTMLImageElement;
 
-    function BitmapDataDemo(canvasID): void {
+    function BitmapDataDemo(canvasID: string): void {
 		this._instance = this;
         var canvas = this.canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		this.stage = new createjs.Stage(canvas);
@@ -79,7 +79,7 @@
 		this.channelY = ((Math.random() * 3) >> 0) * 8;
 	};
 
-    p.tick = function (evt): void {
+    p.tick = function (evt: createjs.Event): void {
 		var w = this.stageW;
 		var h = this.stageH;
 		var bmd = this.bmd;
@@ -124,7 +124,7 @@
 
     function load(): void {
 		var loader = new createjs.LoadQueue();
-		function fileloadHandler (evt) {
+		function fileloadHandler (evt: createjs.Event) {
 			this._forceMapImage = evt.result;
 			loader.removeAllEventListeners();
 			loader.removeAll();
@@ -135,7 +135,7 @@
 	}
 
     var Particle = (function(): void {
-		function Particle(x, y, ax, ay, sx, sy) {
+        function Particle(x: number, y: number, ax: number, ay: number, sx: number, sy: number) {
 			this.x = x;
 			this.y = y;
 			this.ax = ax;
@@ -153,9 +153,9 @@
 		return this.Particle;
 	}());
 
-    window.addEventListener("load", function loadHandler(evt): void {
+    window.addEventListener("load", function loadHandler(evt: Event): void {
 		removeEventListener("load", loadHandler);
-		new BitmapDataDemo("my-canvas");
+		BitmapDataDemo("my-canvas");
 	});
 
 }(window));
