@@ -15,15 +15,15 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function(window) {
-	var FPS = 60;
+(function (window) {
+    var FPS: number = 60;
 
-	var _canvas;
-	var _stage;
-	var _bmd01;
-	var _bitmap01;
+    var _canvas: HTMLCanvasElement;
+    var _stage: createjs.Stage;
+    var _bmd01: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap;
 
-	function init(canvasID) {
+    function init(canvasID): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		if (createjs.Touch.isSupported()) {
@@ -56,12 +56,12 @@
 		_bitmap01.addEventListener("click", clickHandler);
 	}
 
-	function clickHandler(evt) {
+    function clickHandler(evt): void {
 		_bmd01.floodFill(evt.stageX, evt.stageY, 0xFFCCCCCC);
 		_stage.update();
 	}
 
-	window.addEventListener("load", function loadHandler(evt) {
+    window.addEventListener("load", function loadHandler(evt): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

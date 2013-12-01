@@ -16,17 +16,16 @@
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
 (function(window) {
-	var FPS = 60;
+	var FPS: number = 60;
 
-	var _stats;
-	var _canvas;
-	var _stage;
-	var _source;
-	var _sourceRect;
-	var _bmd01;
-	var _bitmap01;
+	var _canvas: HTMLCanvasElement;
+	var _stage: createjs.Stage;
+	var _source: createjs.BitmapData;
+	var _sourceRect: createjs.Rectangle;
+	var _bmd01: createjs.BitmapData;
+	var _bitmap01: createjs.Bitmap;
 
-	function init(canvasID) {
+	function init(canvasID): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		var shape = new createjs.Shape();
@@ -47,14 +46,12 @@
 		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
-	function tickHandler(evt) {
-		draw();
+	function tickHandler(evt): void {
 		draw();
 		_stage.update();
-		_stats.update();
 	}
 
-	function draw() {
+	function draw(): void {
 		var matrix = new createjs.Matrix2D(1, 0, 0, 1, -_sourceRect.width >> 1, -_sourceRect.height >> 1);
 		var rotation = Math.random() * 360 >> 0;
 		matrix.rotate(rotation * createjs.Matrix2D.DEG_TO_RAD);
@@ -74,7 +71,7 @@
 		_bmd01.fillRect(new createjs.Rectangle(0, 0, _bmd01.width, _bmd01.height), 0x06000000);
 	}
 
-	window.addEventListener("load", function loadHandler(evt) {
+    window.addEventListener("load", function loadHandler(evt): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

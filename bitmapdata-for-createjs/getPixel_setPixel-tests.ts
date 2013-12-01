@@ -16,18 +16,16 @@
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
 (function(window) {
-	var FPS = 60;
-	var NUM_PARTICLE = 10000;
-	var LIGHTER_SCALE = 5;
-	var INTERVAL = 3000;
+    var FPS: number = 60;
+    var NUM_PARTICLE: number = 10000;
+    var LIGHTER_SCALE: number = 5;
+    var INTERVAL: number = 3000;
 
-	var _stats;
-	var _instance;
-	var _forceMapImage;
+	var _instance: Object;
+	var _forceMapImage: HTMLImageElement;
 
-	function BitmapDataDemo (canvasID) {
-		document.body.appendChild(_stats.domElement);
-		_instance = this;
+    function BitmapDataDemo(canvasID): void {
+		this._instance = this;
         var canvas = this.canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		this.stage = new createjs.Stage(canvas);
 		this.stageW = canvas.width;
@@ -51,10 +49,10 @@
 	p.channelX = 0;
 	p.channelY = 1;
 
-	p.init = function () {
+    p.init = function (): void {
 		var w = this.stageW;
 		var h = this.stageH;
-		this.forcemap = new createjs.BitmapData(_forceMapImage);
+		this.forcemap = new createjs.BitmapData(this._forceMapImage);
 		var bmd = this.bmd = new createjs.BitmapData(null, w, h);
 		this.bitmap = new createjs.Bitmap(bmd.canvas);
 		this.stage.addChild(this.bitmap);
@@ -64,24 +62,24 @@
 		for (var i = 0, l = NUM_PARTICLE; i < l; i++) {
 			var x = Math.random() * w >> 0;
 			var y = Math.random() * h >> 0;
-			particles[i] = new Particle(x, y, 0, 0, 0, 0);
+			particles[i] = new this.Particle(x, y, 0, 0, 0, 0);
 		}
 		createjs.Ticker.setFPS(FPS);
 		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 		createjs.Ticker.addEventListener("tick", function () {
-			_instance.tick();
+			this._instance.tick();
 		});
 		this.intervalID = setInterval(function() {
-			_instance.changeMapChannel();
+			this._instance.changeMapChannel();
 		}, INTERVAL);
 	};
 
-	p.changeMapChannel = function() {
+    p.changeMapChannel = function (): void {
 		this.channelX = ((Math.random() * 3) >> 0) * 8;
 		this.channelY = ((Math.random() * 3) >> 0) * 8;
 	};
 
-	p.tick = function (evt) {
+    p.tick = function (evt): void {
 		var w = this.stageW;
 		var h = this.stageH;
 		var bmd = this.bmd;
@@ -122,22 +120,21 @@
 		lighter.drawImage(bmd, 0, 0, w, h, 0, 0, w / LIGHTER_SCALE, h / LIGHTER_SCALE);
 		bmd.draw(lighter, new createjs.Matrix2D(LIGHTER_SCALE, 0, 0, LIGHTER_SCALE, 0, 0), null, "lighter", null, true);
 		this.stage.update();
-		_stats.update();
 	};
 
-	function load () {
+    function load(): void {
 		var loader = new createjs.LoadQueue();
 		function fileloadHandler (evt) {
-			_forceMapImage = evt.result;
+			this._forceMapImage = evt.result;
 			loader.removeAllEventListeners();
 			loader.removeAll();
-			_instance.init();
+			this._instance.init();
 		}
 		loader.addEventListener("fileload", fileloadHandler);
 		loader.loadFile({src:"img/forcemap.jpg", id:"forcemap"});
 	}
 
-	var Particle = (function () {
+    var Particle = (function(): void {
 		function Particle(x, y, ax, ay, sx, sy) {
 			this.x = x;
 			this.y = y;
@@ -153,10 +150,10 @@
 		p.ay = 0;
 		p.sx = 0;
 		p.sy = 0;
-		return Particle;
+		return this.Particle;
 	}());
 
-	window.addEventListener("load", function loadHandler(evt) {
+    window.addEventListener("load", function loadHandler(evt): void {
 		removeEventListener("load", loadHandler);
 		new BitmapDataDemo("my-canvas");
 	});

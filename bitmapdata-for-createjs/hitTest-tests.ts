@@ -15,23 +15,22 @@
 /// <reference path="bitmapdata-for-createjs.d.ts" />
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
-(function(window) {
-	var FPS = 60;
+(function (window) {
+    var FPS: number = 60;
 
-	var _stats;
-	var _canvas;
-	var _stage;
-	var _centerX;
-	var _centerY;
-	var _image01;
-	var _bmd01;
-	var _bitmap01;
-	var _shape;
-	var _shape_bmd;
-	var _angle = 0;
-	var _isHitting = false;
+    var _canvas: HTMLCanvasElement;
+    var _stage: createjs.Stage;
+	var _centerX: number;
+    var _centerY: number;
+    var _image01: HTMLImageElement;
+    var _bmd01: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap;
+    var _shape: createjs.Shape;
+    var _shape_bmd: createjs.BitmapData;
+	var _angle: number = 0;
+	var _isHitting: boolean = false;
 
-	function init(canvasID) {
+    function init(canvasID): void {
         _canvas = <HTMLCanvasElement>document.getElementById(canvasID);
 		_stage = new createjs.Stage(_canvas);
 		_centerX = _canvas.width >> 1;
@@ -41,7 +40,7 @@
 		load();
 	}
 
-	function draw() {
+    function draw(): void {
 		_bmd01 = new createjs.BitmapData(_image01);
 		var source = _bmd01;
 		var sourceRect = new createjs.Rectangle(0, 0, _bmd01.width, _bmd01.height);
@@ -60,7 +59,7 @@
 		createjs.Ticker.addEventListener("tick", tickHandler);
 	}
 
-	function tickHandler(evt) {
+    function tickHandler(evt): void {
 		_shape.x = (Math.cos(_angle * createjs.Matrix2D.DEG_TO_RAD) * 160 + _centerX) >> 0;
 		_shape.y = (Math.sin(_angle * createjs.Matrix2D.DEG_TO_RAD) * 80 + _centerY) >> 0;
 		var firstPoint = new createjs.Point(_bitmap01.x, _bitmap01.y);
@@ -80,29 +79,28 @@
 		_angle += 1;
 		_angle = _angle % 360;
 		_stage.update();
-		_stats.update();
 	}
 
-	function changeColor(color) {
+    function changeColor(color): void {
 		_isHitting = !_isHitting;
 		_shape.graphics.c().f(color).dc(0, 0, 20).ef();
 		_shape.updateCache();
 		_shape_bmd.updateImageData();
 	}
 
-	function load() {
+    function load(): void {
 		var loader = new createjs.LoadQueue();
 		var manifest = [
 			{src:"img/image_01.jpg", id:"image01"}
 		];
-		function fileloadHandler(evt) {
+        function fileloadHandler(evt): void {
 			switch(evt.item.id) {
 				case "image01" :
 					_image01 = evt.result;
 					break;
 			}
 		}
-		function completeHandler(evt) {
+        function completeHandler(evt): void {
 			loader.removeAllEventListeners();
 			loader.removeAll();
 			draw();
@@ -112,7 +110,7 @@
 		loader.loadManifest(manifest);
 	}
 
-	window.addEventListener("load", function loadHandler(evt) {
+    window.addEventListener("load", function loadHandler(evt): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});

@@ -16,19 +16,18 @@
 /// <reference path="../preloadjs/preloadjs.d.ts" />
 
 
-(function(window) {
-	var FPS = 30;
+(function (window) {
+    var FPS: number = 30;
 
-	var _stats;
-	var _canvas;
-	var _stage;
-	var _image01, _image02;
-	var _bmd01;
-	var _bitmap01;
-	var _source;
-	var _buffer;
+    var _canvas: HTMLCanvasElement;
+    var _stage: createjs.Stage;
+    var _image01, _image02: HTMLImageElement;
+    var _bmd01: createjs.BitmapData;
+    var _bitmap01: createjs.Bitmap;
+    var _source: HTMLImageElement;
+	var _buffer: any;
 
-	function init(canvasID) {
+    function init(canvasID): void {
 		var ua = navigator.userAgent.toString().toLowerCase();
 		if (ua.indexOf("iphone") != -1 || ua.indexOf("ipad") != -1 || ua.indexOf("android") != -1) {
 			document.body.innerHTML = "<p>このサンプルは処理負荷が高いため、モバイル端末では表示しないようにしています。<br>恐れ入りますが、PCのブラウザでご覧下さい。</p>";
@@ -41,7 +40,7 @@
 		load();
 	}
 
-	function draw() {
+    function draw(): void {
 		_bmd01 = new createjs.BitmapData(null, 200, 200, 0xCCCCCC);
 		_bitmap01 = new createjs.Bitmap(_bmd01.canvas);
 		_bitmap01.regX = _bmd01.width >> 1;
@@ -54,7 +53,7 @@
 		_source = _image01;
 	}
 
-	function tickHandler(evt) {
+    function tickHandler(evt): void {
 		if (_buffer === 0) {
 			return;
 		}
@@ -64,21 +63,20 @@
 		var fillColor = null
 		_buffer = _bmd01.pixelDissolve(_source, sourceRect, destPoint, _buffer, numPixels, fillColor);
 		_stage.update();
-		_stats.update();
 	}
 
-	function changeSource(evt) {
+    function changeSource(evt): void {
 		_source = (_source === _image01) ? _image02 : _image01;
 		_buffer = null;
 	}
 
-	function load() {
+    function load(): void {
 		var loader = new createjs.LoadQueue();
 		var manifest = [
 			{src:"img/image_01_s.jpg", id:"image01s"},
 			{src:"img/image_02_s.jpg", id:"image02s"}
 		];
-		function fileloadHandler(evt) {
+        function fileloadHandler(evt): void {
 			switch(evt.item.id) {
 				case "image01s" :
 					_image01 = evt.result;
@@ -88,7 +86,7 @@
 					break;
 			}
 		}
-		function completeHandler(evt) {
+        function completeHandler(evt): void {
 			loader.removeAllEventListeners();
 			loader.removeAll();
 			draw();
@@ -98,7 +96,7 @@
 		loader.loadManifest(manifest);
 	}
 
-	window.addEventListener("load", function loadHandler(evt) {
+    window.addEventListener("load", function loadHandler(evt): void {
 		removeEventListener("load", loadHandler);
 		init("my-canvas")
 	});
