@@ -1,7 +1,22 @@
 {
-        "name": "TSDef_BitmapDataForCreateJS",
-        "version": "0.0.0",
-    "scripts": {
-        "test": "node ./_infrastructure/tests/runner.js --tsc-version 0.9.1.1"
-    }
+  "name": "TSDef_BitmapDataForCreateJS",
+  "version": "0.0.0",
+  "description": "createjs typescript template.",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/gyohk/threejs-typescript-template.git"
+  },
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "author": "gyohk",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "dtsm": "^0.9.1",
+    "grunt": "^0.4.5",
+    "grunt-dtsm": "^0.2.8",
+    "grunt-ts": "~4.0.1",
+    "typescript": "^1.5.0-alpha"
+  }
 }

@@ -1,0 +1,36 @@
+{
+  "repos": [
+    {
+      "url": "https://github.com/borisyankov/DefinitelyTyped.git",
+      "ref": "master"
+    }
+  ],
+  "path": "../",
+  "bundle": "../typings/bundle.d.ts",
+  "dependencies": {
+    "createjs/createjs.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "soundjs/soundjs.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "createjs-lib/createjs-lib.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "tweenjs/tweenjs.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "easeljs/easeljs.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "preloadjs/preloadjs.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "webaudioapi/waa.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "webrtc/MediaStream.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    }
+  }
+}

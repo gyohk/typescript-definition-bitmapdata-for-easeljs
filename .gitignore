@@ -1,0 +1,11 @@
+.tscache
+createjs
+createjs-lib
+easeljs
+preloadjs
+soundjs
+typings
+tweenjs
+webaudioapi
+webrtc
+node_modules/*
